@@ -1,0 +1,8 @@
+{
+  "name": "PlanPasika.v2",
+  "description": "Natywna aplikacja treningowa Android (Xiaomi 14T) w Jetpack Compose i Material 3. Offline-first, nowoczesny ciemny design, 5 modułów głównych.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
