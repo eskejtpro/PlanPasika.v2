@@ -87,12 +87,16 @@ fun MainAppScaffold() {
                     viewModel = myWeekViewModel,
                     onStartWorkout = { navController.navigate(Screen.Workout.route) },
                     onNavigateToCalendar = { navController.navigate(Screen.Calendar.route) },
-                    onNavigateToPlans = { navController.navigate(Screen.Plans.route) }
+                    onNavigateToPlans = { navController.navigate(Screen.Plans.route) },
+                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
                 )
             }
             composable(Screen.Plans.route) {
                 val plansViewModel: com.planpasika.v2.ui.screens.plans.PlansViewModel = viewModel()
-                com.planpasika.v2.ui.screens.plans.PlansScreen(viewModel = plansViewModel)
+                com.planpasika.v2.ui.screens.plans.PlansScreen(
+                    viewModel = plansViewModel,
+                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
+                )
             }
             composable(Screen.Workout.route) {
                 Box(
@@ -128,6 +132,13 @@ fun MainAppScaffold() {
                 ) {
                     Text(text = "Moduł Analizy (Jetpack Compose)", color = TextPrimary)
                 }
+            }
+            composable(Screen.Settings.route) {
+                val settingsViewModel: com.planpasika.v2.ui.screens.settings.SettingsViewModel = viewModel()
+                com.planpasika.v2.ui.screens.settings.SettingsScreen(
+                    viewModel = settingsViewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
         }
     }

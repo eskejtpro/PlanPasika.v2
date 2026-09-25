@@ -20,11 +20,16 @@ import {
   FileText,
   Edit3,
   Save,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { usePlansViewModel } from '../../viewmodel/usePlansViewModel';
 import { DayStatus, EXERCISE_CATEGORIES, ExerciseDefinition } from '../../domain/types';
 
-export const PlansScreen: React.FC = () => {
+interface PlansScreenProps {
+  onOpenSettings?: () => void;
+}
+
+export const PlansScreen: React.FC<PlansScreenProps> = ({ onOpenSettings }) => {
   const {
     cycleData,
     selectedWeek,
@@ -98,8 +103,31 @@ export const PlansScreen: React.FC = () => {
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-4 pb-12 select-none">
+      {/* 0. Top Header with Title and Settings Gear Icon */}
+      <div className="flex items-center justify-between pt-1">
+        <div>
+          <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            Plany Treningowe
+          </h1>
+          <p className="text-[11px] font-medium text-slate-400">
+            Zarządzanie cyklem i mikrocyklami
+          </p>
+        </div>
+
+        {onOpenSettings && (
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="p-1.5 rounded-xl bg-[#111824] hover:bg-[#182335] border border-[#223147] text-slate-300 hover:text-[#00F59B] transition-all text-xs font-semibold shadow-sm active:scale-95"
+            title="Otwórz Ustawienia (⚙)"
+          >
+            <SettingsIcon className="w-4 h-4 text-[#00F59B]" />
+          </button>
+        )}
+      </div>
+
       {/* 1. SEKCJA: CYKL TRENINGOWY */}
-      <section aria-labelledby="cycle-heading" className="space-y-2.5 pt-1">
+      <section aria-labelledby="cycle-heading" className="space-y-2.5">
         <div className="glass-card p-3.5 rounded-3xl border border-white/10 relative overflow-hidden">
           <div className="flex items-center justify-between">
             <div>

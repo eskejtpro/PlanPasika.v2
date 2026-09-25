@@ -14,11 +14,13 @@ import { CatalogScreen } from './ui/screens/CatalogScreen';
 import { CalendarScreen } from './ui/screens/CalendarScreen';
 import { AnalyticsScreen } from './ui/screens/AnalyticsScreen';
 import { MeasurementsScreen } from './ui/screens/MeasurementsScreen';
+import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { FloatingWorkoutTimer } from './ui/components/FloatingWorkoutTimer';
 import { LocalStorageRepo } from './data/localStorageRepo';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTabId>('today');
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isCodeViewerOpen, setIsCodeViewerOpen] = useState<boolean>(false);
   const [activeWorkoutRunning, setActiveWorkoutRunning] = useState<boolean>(false);
 
@@ -35,6 +37,7 @@ export default function App() {
   }, []);
 
   const handleStartWorkout = () => {
+    setIsSettingsOpen(false);
     setCurrentTab('workout');
   };
 
@@ -42,42 +45,55 @@ export default function App() {
     <XiaomiDeviceFrame
       currentTab={currentTab}
       onSelectTab={(tab) => {
+        setIsSettingsOpen(false);
         setCurrentTab(tab);
         checkActiveWorkout();
       }}
       activeWorkoutRunning={activeWorkoutRunning}
       onOpenCodeViewer={() => setIsCodeViewerOpen(true)}
     >
-      {/* 5 Main Screens */}
-      {currentTab === 'today' && (
-        <TodayScreen
-          onStartWorkout={handleStartWorkout}
-          onNavigateToCalendar={() => setCurrentTab('calendar')}
-          onNavigateToPlans={() => setCurrentTab('plans')}
-        />
+      {/* Settings Screen when activated */}
+      {isSettingsOpen ? (
+        <SettingsScreen onNavigateBack={() => setIsSettingsOpen(false)} />
+      ) : (
+        <>
+          {/* Main Module Screens */}
+          {currentTab === 'today' && (
+            <TodayScreen
+              onStartWorkout={handleStartWorkout}
+              onNavigateToCalendar={() => setCurrentTab('calendar')}
+              onNavigateToPlans={() => setCurrentTab('plans')}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+          )}
+
+          {currentTab === 'plans' && (
+            <PlansScreen onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
+
+          {currentTab === 'workout' && (
+            <WorkoutScreen
+              onWorkoutFinished={() => {
+                checkActiveWorkout();
+                setCurrentTab('today');
+              }}
+            />
+          )}
+
+          {currentTab === 'catalog' && <CatalogScreen />}
+
+          {currentTab === 'calendar' && (
+            <CalendarScreen onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
+
+          {currentTab === 'analytics' && <AnalyticsScreen />}
+
+          {currentTab === 'measurements' && <MeasurementsScreen />}
+
+          {/* Floating dynamic stopwatch & rest timer */}
+          <FloatingWorkoutTimer onNavigateToWorkout={() => setCurrentTab('workout')} />
+        </>
       )}
-
-      {currentTab === 'plans' && <PlansScreen />}
-
-      {currentTab === 'workout' && (
-        <WorkoutScreen
-          onWorkoutFinished={() => {
-            checkActiveWorkout();
-            setCurrentTab('today');
-          }}
-        />
-      )}
-
-      {currentTab === 'catalog' && <CatalogScreen />}
-
-      {currentTab === 'calendar' && <CalendarScreen />}
-
-      {currentTab === 'analytics' && <AnalyticsScreen />}
-
-      {currentTab === 'measurements' && <MeasurementsScreen />}
-
-      {/* Floating dynamic stopwatch & rest timer */}
-      <FloatingWorkoutTimer onNavigateToWorkout={() => setCurrentTab('workout')} />
 
       {/* Kotlin / Jetpack Compose Source Code Inspector Modal */}
       <CodeViewerModal

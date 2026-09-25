@@ -335,6 +335,74 @@ fun MeasurementsScreen(
     }
 }`,
   },
+  'AppSettings.kt': {
+    path: 'android/app/src/main/java/com/planpasika/v2/domain/model/AppSettings.kt',
+    category: 'Domain',
+    content: `package com.planpasika.v2.domain.model
+
+enum class AppThemeMode(val title: String, val description: String) {
+    AMOLED("PlanPasika AMOLED", "Głęboka czerń, neonowa zieleń i turkus"),
+    DARK_BLUE("Dark Blue", "Ciemny granat z błękitnymi akcentami"),
+    GRAPHITE("Graphite", "Grafitowe tło ze szmaragdowym akcentem"),
+    PURPLE_DARK("Purple Dark", "Głęboki fiolet i neonowy purpurowy blask"),
+    RED_PERFORMANCE("Red Performance", "Agresywna czerwień i głęboki karmazyn"),
+    LIGHT("Light Clean", "Jasne tło z ciemnym tekstem i zielenią"),
+    SYSTEM("Systemowy", "Automatyczne dopasowanie do motywu Androida")
+}
+
+data class AppSettings(
+    val themeMode: AppThemeMode = AppThemeMode.AMOLED,
+    val autoRestTimer: Boolean = true,
+    val defaultRestDurationSeconds: Int = 90,
+    val vibrateOnTimerEnd: Boolean = true,
+    val soundOnTimerEnd: Boolean = true,
+    val quickAddSeconds: Int = 30,
+    val amoledPureBlack: Boolean = true,
+    val glowEffectsEnabled: Boolean = true
+)`,
+  },
+  'SettingsRepository.kt': {
+    path: 'android/app/src/main/java/com/planpasika/v2/data/repository/SettingsRepository.kt',
+    category: 'data',
+    content: `package com.planpasika.v2.data.repository
+
+import android.content.Context
+import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.preferencesDataStore
+import com.planpasika.v2.domain.model.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class SettingsRepository(private val context: Context) {
+    // DataStore Preferences implementation
+    val settingsFlow: Flow<AppSettings> = context.dataStore.data.map { ... }
+    suspend fun saveAllSettings(settings: AppSettings) { ... }
+    suspend fun resetToDefaults() { ... }
+}`,
+  },
+  'SettingsScreen.kt': {
+    path: 'android/app/src/main/java/com/planpasika/v2/ui/screens/settings/SettingsScreen.kt',
+    category: 'ui',
+    content: `package com.planpasika.v2.ui.screens.settings
+
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import com.planpasika.v2.domain.model.*
+
+/**
+ * Moduł Ustawienia + Motywy (Jetpack Compose Material 3)
+ */
+@Composable
+fun SettingsScreen(
+    viewModel: SettingsViewModel,
+    onNavigateBack: () -> Unit
+) {
+    // Sekcja 1: Wygląd (7 motywów: AMOLED, Dark Blue, Graphite, Purple, Red, Light, System)
+    // Sekcja 2: Trening & Timery (Auto rest timer, wibracja, dźwięk)
+    // Sekcja 3: Plan & Pomiary
+    // Sekcja 4: Kopia zapasowa i reset ustawień
+}`,
+  },
 };
 
 export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({ isOpen, onClose }) => {

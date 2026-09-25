@@ -15,6 +15,13 @@ import {
   ChevronRight,
   SlidersHorizontal,
   RotateCcw,
+  Zap,
+  Layers,
+  HeartPulse,
+  Shield,
+  Activity,
+  Target,
+  Sparkles,
 } from 'lucide-react';
 import { useCatalogViewModel, CATALOG_CATEGORIES } from '../../viewmodel/useCatalogViewModel';
 import { ExerciseCategory, ExerciseDefinition } from '../../domain/types';
@@ -48,6 +55,26 @@ export const CatalogScreen: React.FC = () => {
     handleOpenAddToPlan,
     handleConfirmAddToPlan,
   } = useCatalogViewModel();
+
+  const getCategoryMeta = (cat: string) => {
+    switch (cat) {
+      case 'Klata':
+      case 'Klatka piersiowa':
+        return { icon: HeartPulse, color: 'text-emerald-400', bg: 'bg-emerald-950/70 border-emerald-500/40' };
+      case 'Plecy':
+        return { icon: Layers, color: 'text-sky-400', bg: 'bg-sky-950/70 border-sky-500/40' };
+      case 'Barki':
+        return { icon: Shield, color: 'text-purple-400', bg: 'bg-purple-950/70 border-purple-500/40' };
+      case 'Biceps':
+        return { icon: Zap, color: 'text-amber-400', bg: 'bg-amber-950/70 border-amber-500/40' };
+      case 'Triceps':
+        return { icon: Flame, color: 'text-rose-400', bg: 'bg-rose-950/70 border-rose-500/40' };
+      case 'Nogi':
+        return { icon: Activity, color: 'text-teal-400', bg: 'bg-teal-950/70 border-teal-500/40' };
+      default:
+        return { icon: Dumbbell, color: 'text-[#00F59B]', bg: 'bg-emerald-950/70 border-[#00F59B]/40' };
+    }
+  };
 
   // Form state for creating / editing any exercise
   const [formName, setFormName] = useState<string>('');
@@ -166,18 +193,21 @@ export const CatalogScreen: React.FC = () => {
           {CATALOG_CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             const count = categoryCounts[cat.id] || 0;
+            const catMeta = getCategoryMeta(cat.domainCategory || cat.id);
+            const IconComp = cat.id === 'all' ? Layers : catMeta.icon;
 
             return (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl font-extrabold text-xs transition-all shrink-0 border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl font-extrabold text-xs transition-all shrink-0 border ${
                   isSelected
                     ? 'bg-[#142334] text-[#00F59B] border-[#00F59B] shadow-[0_0_12px_rgba(0,245,155,0.25)] ring-1 ring-[#00F59B]/50'
                     : 'bg-[#0E1520] hover:bg-[#131D2B] text-slate-300 border-[#1B2738]'
                 }`}
               >
+                <IconComp className={`w-3.5 h-3.5 ${isSelected ? 'text-[#00F59B]' : catMeta.color}`} />
                 <span>{cat.label}</span>
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
@@ -210,70 +240,83 @@ export const CatalogScreen: React.FC = () => {
             </button>
           </div>
         ) : (
-          filteredExercises.map((exercise) => (
-            <div
-              key={exercise.id}
-              className="glass-card p-4 rounded-3xl border border-white/5 space-y-3 relative hover:border-[#00F59B]/30 transition-all duration-200"
-            >
-              {/* Top row: Name & Badges */}
-              <div className="flex items-start justify-between gap-2">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] font-extrabold text-[#00F59B] bg-emerald-950/70 px-2.5 py-0.5 rounded-lg border border-[#00F59B]/30">
-                      {exercise.category}
-                    </span>
-                    {exercise.equipment && (
-                      <span className="text-[10px] font-bold text-slate-300 bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-700">
-                        {exercise.equipment}
-                      </span>
-                    )}
-                    {exercise.isCustom && (
-                      <span className="text-[10px] font-extrabold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-500/30">
-                        Własne
-                      </span>
-                    )}
+          filteredExercises.map((exercise) => {
+            const meta = getCategoryMeta(exercise.category);
+            const CatIcon = meta.icon;
+
+            return (
+              <div
+                key={exercise.id}
+                className="glass-card p-4 rounded-3xl border border-white/5 space-y-3 relative hover:border-[#00F59B]/30 transition-all duration-200"
+              >
+                {/* Top row: Thumbnail Avatar + Name & Badges + Actions */}
+                <div className="flex items-start justify-between gap-2.5">
+                  <div className="flex items-start gap-3">
+                    {/* Miniaturka partii mięśniowej / kategoria */}
+                    <div
+                      className={`w-10 h-10 rounded-2xl border flex items-center justify-center shrink-0 shadow-md ${meta.bg}`}
+                    >
+                      <CatIcon className={`w-5 h-5 ${meta.color}`} />
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-lg border ${meta.bg} ${meta.color}`}>
+                          {exercise.category}
+                        </span>
+                        {exercise.equipment && (
+                          <span className="text-[10px] font-bold text-slate-300 bg-slate-800/90 px-2 py-0.5 rounded-lg border border-slate-700">
+                            {exercise.equipment}
+                          </span>
+                        )}
+                        {exercise.isCustom && (
+                          <span className="text-[10px] font-extrabold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-500/30">
+                            Własne
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-base font-extrabold text-white tracking-tight leading-snug">
+                        {exercise.name}
+                      </h3>
+                    </div>
                   </div>
 
-                  <h3 className="text-base font-extrabold text-white tracking-tight leading-snug">
-                    {exercise.name}
-                  </h3>
-                </div>
-
-                {/* Edit & Management Actions - available for EVERY exercise */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => openEditModal(exercise)}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-800/90 text-slate-200 hover:text-[#00F59B] hover:bg-[#142334] border border-slate-700/80 hover:border-[#00F59B]/50 transition-all font-bold text-xs active:scale-95 shadow-sm"
-                    title="Edytuj parametry tego ćwiczenia (serie, powtórzenia, opis, sprzęt)"
-                  >
-                    <Edit3 className="w-3.5 h-3.5 text-[#00F59B]" />
-                    <span>Edytuj</span>
-                  </button>
-
-                  {exercise.isCustom ? (
+                  {/* Edit & Management Actions */}
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
-                      onClick={() => setDeleteCandidate(exercise)}
-                      className="p-1.5 rounded-xl bg-rose-950/40 text-rose-400 hover:text-rose-300 border border-rose-500/30 transition-all"
-                      title="Usuń to ćwiczenie z bazy"
+                      onClick={() => openEditModal(exercise)}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-800/90 text-slate-200 hover:text-[#00F59B] hover:bg-[#142334] border border-slate-700/80 hover:border-[#00F59B]/50 transition-all font-bold text-xs active:scale-95 shadow-sm"
+                      title="Edytuj parametry tego ćwiczenia (serie, powtórzenia, opis, sprzęt)"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Edit3 className="w-3.5 h-3.5 text-[#00F59B]" />
+                      <span>Edytuj</span>
                     </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => handleResetExerciseToDefault(exercise.id)}
-                      className="p-1.5 rounded-xl bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700 border border-slate-700/40 transition-all"
-                      title="Przywróć domyślne parametry wzorca"
-                    >
-                      <RotateCcw className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
-              </div>
 
-              {/* Technique Description */}
+                    {exercise.isCustom ? (
+                      <button
+                        type="button"
+                        onClick={() => setDeleteCandidate(exercise)}
+                        className="p-1.5 rounded-xl bg-rose-950/40 text-rose-400 hover:text-rose-300 border border-rose-500/30 transition-all"
+                        title="Usuń to ćwiczenie z bazy"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleResetExerciseToDefault(exercise.id)}
+                        className="p-1.5 rounded-xl bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700 border border-slate-700/40 transition-all"
+                        title="Przywróć domyślne parametry wzorca"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Technique Description */}
               {exercise.technique ? (
                 <div className="bg-[#070A0F] rounded-2xl p-3 border border-slate-800/70 text-xs text-slate-300 leading-relaxed group">
                   <div className="flex items-center justify-between mb-1">
@@ -357,7 +400,8 @@ export const CatalogScreen: React.FC = () => {
                 </button>
               </div>
             </div>
-          ))
+            );
+          })
         )}
       </section>
 

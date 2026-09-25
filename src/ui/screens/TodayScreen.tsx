@@ -19,6 +19,7 @@ import {
   Edit3,
   Calendar,
   AlertTriangle,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { useTodayViewModel, WeekDayItem } from '../../viewmodel/useTodayViewModel';
 import { DayStatus, DayType, PlanDay } from '../../domain/types';
@@ -27,12 +28,14 @@ interface TodayScreenProps {
   onStartWorkout: () => void;
   onNavigateToCalendar: () => void;
   onNavigateToPlans: () => void;
+  onOpenSettings?: () => void;
 }
 
 export const TodayScreen: React.FC<TodayScreenProps> = ({
   onStartWorkout,
   onNavigateToCalendar,
   onNavigateToPlans,
+  onOpenSettings,
 }) => {
   const {
     weekRangeFormatted,
@@ -133,16 +136,30 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({
           </p>
         </div>
 
-        {/* Przycisk przejścia do pełnego kalendarza */}
-        <button
-          type="button"
-          onClick={onNavigateToCalendar}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#111824] hover:bg-[#182335] border border-[#223147] text-slate-200 hover:text-white transition-all text-xs font-semibold shadow-sm active:scale-95"
-          title="Przejdź do pełnego kalendarza"
-        >
-          <CalendarDays className="w-3.5 h-3.5 text-[#00F59B]" />
-          <span>Kalendarz</span>
-        </button>
+        <div className="flex items-center gap-1.5">
+          {/* Przycisk przejścia do pełnego kalendarza */}
+          <button
+            type="button"
+            onClick={onNavigateToCalendar}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#111824] hover:bg-[#182335] border border-[#223147] text-slate-200 hover:text-white transition-all text-xs font-semibold shadow-sm active:scale-95"
+            title="Przejdź do pełnego kalendarza"
+          >
+            <CalendarDays className="w-3.5 h-3.5 text-[#00F59B]" />
+            <span>Kalendarz</span>
+          </button>
+
+          {/* Przycisk Ustawienia ⚙ w prawym górnym rogu ekranu */}
+          {onOpenSettings && (
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              className="p-1.5 rounded-xl bg-[#111824] hover:bg-[#182335] border border-[#223147] text-slate-300 hover:text-[#00F59B] transition-all text-xs font-semibold shadow-sm active:scale-95"
+              title="Otwórz Ustawienia (⚙)"
+            >
+              <SettingsIcon className="w-4 h-4 text-[#00F59B]" />
+            </button>
+          )}
+        </div>
       </header>
 
       {/* 2. SEKCJA „MÓJ TYDZIEŃ”: Wszystkie 7 dni (Poniedziałek – Niedziela) */}

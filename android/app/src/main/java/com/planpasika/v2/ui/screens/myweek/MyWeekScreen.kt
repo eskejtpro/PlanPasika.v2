@@ -30,7 +30,8 @@ fun MyWeekScreen(
     viewModel: MyWeekViewModel,
     onStartWorkout: () -> Unit,
     onNavigateToCalendar: () -> Unit,
-    onNavigateToPlans: () -> Unit
+    onNavigateToPlans: () -> Unit,
+    onNavigateToSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -42,7 +43,7 @@ fun MyWeekScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 96.dp)
     ) {
-        // 1. TOP HEADER: PlanPasika.v2 + Zakres dat + Kalendarz CTA
+        // 1. TOP HEADER: PlanPasika.v2 + Zakres dat + Kalendarz CTA + Settings ⚙
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -52,30 +53,10 @@ fun MyWeekScreen(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "PlanPasika",
-                            style = MaterialTheme.typography.titleLarge,
+                            text = "Plan Treningowy",
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Black),
                             color = TextPrimary
                         )
-                        Text(
-                            text = ".v2",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = NeonGreen
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color(0xFF063B25))
-                                .border(1.dp, NeonGreen.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "PRO",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = NeonGreen
-                            )
-                        }
                     }
                     Spacer(modifier = Modifier.height(2.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -94,23 +75,44 @@ fun MyWeekScreen(
                     }
                 }
 
-                FilledTonalButton(
-                    onClick = onNavigateToCalendar,
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = SurfaceElevated,
-                        contentColor = TextPrimary
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Kalendarz",
-                        tint = NeonGreen,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Kalendarz", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    FilledTonalButton(
+                        onClick = onNavigateToCalendar,
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = SurfaceElevated,
+                            contentColor = TextPrimary
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarMonth,
+                            contentDescription = "Kalendarz",
+                            tint = NeonGreen,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = "Kalendarz", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+
+                    // Przycisk Ustawienia ⚙ w prawym górnym rogu ekranu
+                    IconButton(
+                        onClick = onNavigateToSettings,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(SurfaceElevated)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Ustawienia",
+                            tint = NeonGreen,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }

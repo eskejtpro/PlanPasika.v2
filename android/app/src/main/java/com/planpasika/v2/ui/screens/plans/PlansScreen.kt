@@ -26,7 +26,8 @@ import com.planpasika.v2.ui.theme.*
 
 @Composable
 fun PlansScreen(
-    viewModel: PlansViewModel
+    viewModel: PlansViewModel,
+    onNavigateToSettings: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedWeek = uiState.weeks.find { it.id == uiState.selectedWeekId } ?: uiState.weeks.firstOrNull()
@@ -40,6 +41,43 @@ fun PlansScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 96.dp)
     ) {
+        // 0. TOP HEADER: Plany + Settings ⚙ (w prawym górnym rogu)
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Plany Treningowe",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Black),
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = "Zarządzanie cyklem i mikrocyklami",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary
+                    )
+                }
+
+                IconButton(
+                    onClick = onNavigateToSettings,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(SurfaceElevated)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Ustawienia",
+                        tint = NeonGreen,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+
         // 1. CYKL TRENINGOWY
         item {
             Card(

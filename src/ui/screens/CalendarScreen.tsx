@@ -19,11 +19,16 @@ import {
   HeartPulse,
   Utensils,
   Bookmark,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { useCalendarViewModel } from '../../viewmodel/useCalendarViewModel';
 import { CalendarEvent, EventCategory } from '../../domain/types';
 
-export const CalendarScreen: React.FC = () => {
+interface CalendarScreenProps {
+  onOpenSettings?: () => void;
+}
+
+export const CalendarScreen: React.FC<CalendarScreenProps> = ({ onOpenSettings }) => {
   const {
     selectedDate,
     setSelectedDate,
@@ -168,6 +173,16 @@ export const CalendarScreen: React.FC = () => {
             <Plus className="w-3.5 h-3.5" />
             <span>Notatka</span>
           </button>
+          {onOpenSettings && (
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              className="p-1.5 rounded-xl bg-[#111824] hover:bg-[#182335] border border-[#223147] text-slate-300 hover:text-[#00F59B] transition-all text-xs font-semibold shadow-sm active:scale-95"
+              title="Otwórz Ustawienia (⚙)"
+            >
+              <SettingsIcon className="w-4 h-4 text-[#00F59B]" />
+            </button>
+          )}
         </div>
       </div>
 

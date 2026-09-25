@@ -5,9 +5,10 @@ import {
   Smartphone,
   Maximize2,
   Code2,
-  Sparkles,
 } from 'lucide-react';
 import { NavTabId, NavTabs } from '../../navigation/NavTabs';
+import { SettingsRepo } from '../../data/settingsRepo';
+import { THEME_PRESETS, AppThemeId } from '../../domain/settingsTypes';
 
 interface XiaomiDeviceFrameProps {
   currentTab: NavTabId;
@@ -25,7 +26,17 @@ export const XiaomiDeviceFrame: React.FC<XiaomiDeviceFrameProps> = ({
   children,
 }) => {
   const [isFrameMode, setIsFrameMode] = useState<boolean>(true);
-  const [currentTimeStr, setCurrentTimeStr] = useState<string>('09:41');
+  const [currentTimeStr, setCurrentTimeStr] = useState<string>('15:23');
+  const [themeId, setThemeId] = useState<AppThemeId>(() => SettingsRepo.getSettings().themeId);
+
+  useEffect(() => {
+    const unsub = SettingsRepo.subscribe(() => {
+      setThemeId(SettingsRepo.getSettings().themeId);
+    });
+    return () => unsub();
+  }, []);
+
+  const currentTheme = THEME_PRESETS[themeId] || THEME_PRESETS.amoled;
 
   useEffect(() => {
     const updateTime = () => {
@@ -45,15 +56,21 @@ export const XiaomiDeviceFrame: React.FC<XiaomiDeviceFrameProps> = ({
       <header className="w-full max-w-5xl flex items-center justify-between px-4 py-2.5 mb-2 bg-[#0C111A]/90 border border-[#1A2536] rounded-2xl shadow-md text-xs select-none">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#00F59B] shadow-[0_0_10px_#00F59B] animate-pulse" />
+            <span
+              className="w-2.5 h-2.5 rounded-full animate-pulse"
+              style={{
+                backgroundColor: currentTheme.colors.primary,
+                boxShadow: `0 0 10px ${currentTheme.colors.primary}`,
+              }}
+            />
             <span className="font-extrabold text-white tracking-tight text-sm">
-              PlanPasika<span className="text-[#00F59B]">.v2</span>
+              PlanPasika<span style={{ color: currentTheme.colors.primary }}>.v2</span>
             </span>
           </div>
           <span className="hidden sm:inline-block text-slate-600">|</span>
           <span className="hidden sm:inline-flex items-center gap-1.5 text-slate-400 font-mono text-[11px] bg-slate-900/80 px-2 py-0.5 rounded-md border border-slate-800">
             <Smartphone className="w-3.5 h-3.5 text-[#00F59B]" />
-            Xiaomi 14T · HyperOS · 144Hz AMOLED
+            Xiaomi 14T · HyperOS · {currentTheme.name}
           </span>
         </div>
 
@@ -97,14 +114,21 @@ export const XiaomiDeviceFrame: React.FC<XiaomiDeviceFrameProps> = ({
         }`}
       >
         <div
-          className={`w-full flex flex-col overflow-hidden bg-[#0A0E14] text-slate-100 transition-all ${
+          style={{
+            backgroundColor: currentTheme.colors.bg,
+            color: currentTheme.colors.textPrimary,
+          }}
+          className={`w-full flex flex-col overflow-hidden transition-all ${
             isFrameMode
               ? 'rounded-[46px] border-[10px] border-[#181F2C] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_2px_rgba(255,255,255,0.06)] h-[860px]'
               : 'rounded-2xl border border-slate-800 shadow-xl min-h-[820px]'
           }`}
         >
           {/* Xiaomi 14T HyperOS Status Bar */}
-          <div className="shrink-0 h-10 px-6 flex items-center justify-between bg-[#0A0E14] text-slate-300 select-none text-xs font-semibold relative z-30">
+          <div
+            style={{ backgroundColor: currentTheme.colors.surface }}
+            className="shrink-0 h-10 px-5 flex items-center justify-between text-slate-300 select-none text-xs font-semibold relative z-30 border-b border-white/5"
+          >
             {/* Clock */}
             <span className="font-mono text-[12px] text-white font-bold tracking-tight">
               {currentTimeStr}
@@ -128,8 +152,11 @@ export const XiaomiDeviceFrame: React.FC<XiaomiDeviceFrameProps> = ({
             </div>
           </div>
 
-          {/* Screen Content Container */}
-          <main className="flex-1 flex flex-col overflow-hidden relative bg-[#0A0E14]">
+          {/* Screen Content Container (Inside phone display) */}
+          <main
+            style={{ backgroundColor: currentTheme.colors.bg }}
+            className="flex-1 flex flex-col overflow-hidden relative"
+          >
             {children}
           </main>
 
@@ -142,7 +169,10 @@ export const XiaomiDeviceFrame: React.FC<XiaomiDeviceFrameProps> = ({
 
           {/* Xiaomi Android Gesture Bar Indicator */}
           {isFrameMode && (
-            <div className="shrink-0 h-4 bg-[#0A0E14] flex items-center justify-center pb-1">
+            <div
+              style={{ backgroundColor: currentTheme.colors.surface }}
+              className="shrink-0 h-4 flex items-center justify-center pb-1"
+            >
               <div className="w-32 h-1 bg-slate-600 rounded-full" />
             </div>
           )}

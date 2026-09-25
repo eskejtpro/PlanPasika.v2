@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.filled.Straighten
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -16,8 +18,10 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Catalog : Screen("catalog", "Katalog", Icons.Default.MenuBook)
     object Calendar : Screen("calendar", "Kalendarz", Icons.Default.CalendarMonth)
     object Analytics : Screen("analytics", "Analizy", Icons.Default.Analytics)
+    object Measurements : Screen("measurements", "Pomiary", Icons.Default.Straighten)
+    object Settings : Screen("settings", "Ustawienia", Icons.Default.Settings)
 
     companion object {
-        val bottomNavItems = listOf(MyWeek, Plans, Workout, Catalog, Calendar, Analytics)
+        val bottomNavItems = listOf(MyWeek, Plans, Workout, Catalog, Calendar, Analytics, Measurements)
     }
 }
