@@ -14,6 +14,7 @@ import { CatalogScreen } from './ui/screens/CatalogScreen';
 import { CalendarScreen } from './ui/screens/CalendarScreen';
 import { AnalyticsScreen } from './ui/screens/AnalyticsScreen';
 import { MeasurementsScreen } from './ui/screens/MeasurementsScreen';
+import { FloatingWorkoutTimer } from './ui/components/FloatingWorkoutTimer';
 import { LocalStorageRepo } from './data/localStorageRepo';
 
 export default function App() {
@@ -74,6 +75,9 @@ export default function App() {
       {currentTab === 'analytics' && <AnalyticsScreen />}
 
       {currentTab === 'measurements' && <MeasurementsScreen />}
+
+      {/* Floating dynamic stopwatch & rest timer */}
+      <FloatingWorkoutTimer onNavigateToWorkout={() => setCurrentTab('workout')} />
 
       {/* Kotlin / Jetpack Compose Source Code Inspector Modal */}
       <CodeViewerModal

@@ -119,16 +119,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-3.5 pb-8 select-none">
-      {/* 1. TOP HEADER: PlanPasika.v2 + Zakres dat aktualnego tygodnia + Przycisk przejścia do pełnego kalendarza */}
+      {/* 1. TOP HEADER: Plan Treningowy + Zakres dat aktualnego tygodnia + Przycisk przejścia do pełnego kalendarza */}
       <header className="flex items-center justify-between pt-1">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center">
-              PlanPasika<span className="text-[#00F59B]">.v2</span>
+              Plan Treningowy
             </h1>
-            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-emerald-950/70 border border-[#00F59B]/30 text-[#00F59B] rounded-full">
-              PRO
-            </span>
           </div>
           <p className="text-xs font-semibold text-slate-400 mt-0.5 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00F59B] shadow-[0_0_6px_#00F59B]" />
